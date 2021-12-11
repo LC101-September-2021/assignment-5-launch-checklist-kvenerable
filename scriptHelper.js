@@ -3,51 +3,54 @@ require('isomorphic-fetch');
 
 
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
-   // Here is the HTML formatting for our mission target div.
-   /*
+    let missionInfo = document.getElementById("missionTarget")
+
+
+   missionInfo.innerHTML +=
+   `
                 <h2>Mission Destination</h2>
                 <ol>
-                    <li>Name: </li>
-                    <li>Diameter: </li>
+                    <li>Name:${name} </li>
+                    <li>Diameter:${diameter}</li>
                     <li>Star: ${star}</li>
-                    <li>Distance from Earth: </li>
-                    <li>Number of Moons: </li>
+                    <li>Distance from Earth: ${distance}</li>
+                    <li>Number of Moons: ${moons} </li>
                 </ol>
-                <img src="">
-   */
+                <img src=${imageUrl}>`;
 }
 
 function validateInput(testInput) {
 
-    if(testInput === null || testInput.trim === ""){
-        return "Empty"
+    if(testInput === null || testInput.trim() === ""){
+        return "Empty";
     } else if( isNaN(Number(testInput)) ){
-        return "Not a Number"
+        return "Not a Number";
     }else{
-        return "Is a Number"
+        return "Is a Number";
     }
    
 }
 
 function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
+    
+    
+    let pilotStatus = document.getElementById("pilotStatus");
+    let copilotStatus = document.getElementById("copilotStatus");
+    let fuelStatus = document.getElementById("fuelStatus");
+    let cargoStatus = document.getElementById("cargoStatus");
+    let launchStatus = document.getElementById("launchStatus");
 
-    let pilotStatus = document.getElementById("pilotStatus")
-    let copilotStatus = document.getElementById("copilotStatus")
-    let fuelStatus = document.getElementById("fuelStatus")
-    let cargoStatus = document.getElementById("cargoStatus")
-    let launchStatus = document.getElementById("launchStatus")
-
-    if (validateInput(pilotName ) === "Empty" || validateInput(copilot)=== "Empty"|| validateInput(fuelLevel)=== "Empty"|| validateInput(cargoLevel)==="Empty") {
-        alert("all field must be filled");
+    if (validateInput(pilot) === "Empty" || validateInput(copilot)=== "Empty"|| validateInput(fuelLevel)=== "Empty"|| validateInput(cargoLevel)==="Empty") {
+        alert("all fields must be filled");
             
-       } else if (validateInput(pilotName)=== "Is a Number" || validateInput(copilot) === "Is a Number"){
-           alert("please input valid information")
+       } else if (validateInput(pilot)=== "Is a Number" || validateInput(copilot) === "Is a Number"){
+           alert("Invalid!!!Letters are only!")
        }else if ( validateInput(fuelLevel)=== "Not a Number" || validateInput(cargoLevel)=== "Not a Number"){
-           alert('please enter a number')
+           alert('Invalid!!! Numbers only!')
        }
         else{
-        pilotStatus.innerHTML = `Pilot ${pilot} ready`
-        copilotStatus.innerHTML = `Copilot ${copilot} ready`
+        pilotStatus.innerHTML = `Pilot ${pilot} is ready for launch `
+        copilotStatus.innerHTML = `Copilot ${copilot} is ready for launch`
         }
 
         if (fuelLevel<10000){
@@ -78,13 +81,19 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 async function myFetch() {
     let planetsReturned;
 
-    planetsReturned = await fetch().then( function(response) {
+    planetsReturned = await fetch("https://handlers.education.launchcode.org/static/planets.json").then( function(response) {
+        return response.json()
+
+        
         });
 
     return planetsReturned;
 }
 
 function pickPlanet(planets) {
+    let randomNum =Math.floor(Math.random()*6)
+    
+    return planets[randomNum]
 }
 
 
